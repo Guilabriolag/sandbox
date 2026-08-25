@@ -1,0 +1,1 @@
+import{state,uid}from"./state.js";export const Relations={add(fromId,type,toId){if(fromId&&toId&&fromId!==toId&&!state.world.relations.some(r=>r.fromId===fromId&&r.toId===toId&&r.type===type))state.world.relations.push({id:uid("relation"),fromId,type,toId})},forEntity(id){return state.world.relations.filter(r=>r.fromId===id||r.toId===id)}};
