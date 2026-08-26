@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor de Território · ZYRO</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="territory-app">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><i data-lucide="layers-3"></i></div>
+        <div>
+          <h1>Editor de Território</h1>
+          <p>World model · geometria · relações · renderer</p>
+        </div>
+      </div>
+
+      <nav class="breadcrumb" aria-label="Caminho territorial">
+        <i data-lucide="map-pin" style="width:14px"></i>
+        <span id="breadcrumbPath">megacomplexo / catarina / zona comercial</span>
+      </nav>
+
+      <div class="top-actions" aria-label="Comandos do mapa">
+        <button id="newMap" class="icon-btn" type="button" title="Novo mapa"><i data-lucide="file-plus"></i></button>
+        <button id="openMap" class="icon-btn" type="button" title="Abrir mapa salvo"><i data-lucide="folder-open"></i></button>
+        <button id="saveMap" class="icon-btn" type="button" title="Salvar"><i data-lucide="save"></i></button>
+        <button id="undoBtn" class="icon-btn" type="button" title="Desfazer"><i data-lucide="undo-2"></i></button>
+        <button id="redoBtn" class="icon-btn" type="button" title="Refazer"><i data-lucide="redo-2"></i></button>
+      </div>
+
+      <div class="status">
+        <span class="dot"></span><span>Modelo em tempo real</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+
+      <aside class="panel library-panel" aria-labelledby="tools-heading">
+        <p class="panel-kicker">Biblioteca</p>
+        <h2 id="tools-heading">Construir território</h2>
+
+        <div class="tool-tabs" role="tablist">
+          <button class="tab-btn active" data-library="draw" type="button">Desenhar</button>
+          <button class="tab-btn" data-library="place" type="button">Posicionar</button>
+          <button class="tab-btn" data-library="edit" type="button">Editar</button>
+        </div>
+
+        <div class="tool-group library-set" data-set="draw">
+          <h3>Estrutura e espaços</h3>
+          <div class="tool-list">
+            <button class="tool-button active" data-tool="select" type="button"><i data-lucide="mouse-pointer-2"></i>Selecionar</button>
+            <button class="tool-button" data-tool="road" data-kind="avenida" type="button"><i data-lucide="route"></i>Avenida / Via</button>
+            <button class="tool-button" data-tool="area" data-kind="praca" type="button"><i data-lucide="pentagon"></i>Praça / Parque</button>
+            <button class="tool-button" data-tool="area" data-kind="zona" type="button"><i data-lucide="map"></i>Zona / Setor</button>
+            <button class="tool-button" data-tool="area" data-kind="lote" type="button"><i data-lucide="square"></i>Quadra / Lote</button>
+          </div>
+        </div>
+
+        <div class="tool-group library-set hidden" data-set="place">
+          <h3>Bibliotecas</h3>
+          <div class="tool-list">
+            <button class="tool-button" data-tool="object" data-kind="predio" type="button"><i data-lucide="building-2"></i>Prédio / Construção</button>
+            <button class="tool-button" data-tool="object" data-kind="porta" type="button"><i data-lucide="door-open"></i>Componente interno</button>
+            <button class="tool-button" data-tool="object" data-kind="arvore" type="button"><i data-lucide="tree-pine"></i>Elemento urbano</button>
+            <button class="tool-button" data-tool="object" data-kind="veiculo" type="button"><i data-lucide="car"></i>Entidade móvel</button>
+          </div>
+        </div>
+
+        <div class="tool-group library-set hidden" data-set="edit">
+          <h3>Transformar</h3>
+          <div class="tool-list">
+            <button class="tool-button" data-tool="move" type="button"><i data-lucide="move"></i>Mover / Pan</button>
+            <button class="tool-button" id="duplicateTool" type="button"><i data-lucide="copy"></i>Duplicar seleção</button>
+            <button class="tool-button" id="rotateTool" type="button"><i data-lucide="rotate-cw"></i>Rotacionar 90°</button>
+            <button class="tool-button" id="groupTool" type="button"><i data-lucide="group"></i>Agrupar</button>
+          </div>
+        </div>
+
+        <div class="quick-row">
+          <button id="copyBtn" class="quick-btn" type="button">Copiar</button>
+          <button id="pasteBtn" class="quick-btn" type="button">Colar</button>
+          <button id="deleteBtn" class="quick-btn" type="button">Excluir</button>
+        </div>
+      </aside>
+
+      <section class="panel preview" aria-labelledby="preview-heading">
+        <div class="preview-head">
+          <div>
+            <p class="panel-kicker">Mapa de trabalho</p>
+            <h2 id="preview-heading">Preview 2D · fonte de verdade no modelo</h2>
+          </div>
+          <div class="view-actions">
+            <button id="zoomOut" class="mini-btn" type="button" aria-label="Diminuir zoom"><i data-lucide="minus"></i></button>
+            <button id="centerMap" class="mini-btn" type="button" aria-label="Centralizar mapa"><i data-lucide="locate-fixed"></i></button>
+            <button id="zoomIn" class="mini-btn" type="button" aria-label="Aumentar zoom"><i data-lucide="plus"></i></button>
+            <button id="gridToggle" class="mini-btn" type="button" aria-label="Alternar grade"><i data-lucide="grid-3x3"></i></button>
+            <button id="rotateView" class="mini-btn" type="button" aria-label="Rotacionar visualização"><i data-lucide="rotate-3d"></i></button>
+          </div>
+          <div class="preview-meta">
+            <span class="count-badge"><span id="entityCount">0</span> entidades</span>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="mapCanvas" aria-label="Mapa territorial editável"></canvas>
+          <div class="canvas-note">Selecione, desenhe vias e áreas ou posicione entidades. Arraste para mover; use a roda para zoom.</div>
+          <div class="map-readout">
+            <span class="readout" id="coordsReadout">X 0 · Y 0 · Z 0</span>
+            <span class="readout" id="scaleReadout">100%</span>
+          </div>
+        </div>
+
+        <footer class="preview-foot">
+          <span>Grade, zoom, pan e seleção funcionam em mouse e toque.</span>
+          <span id="modeReadout">Selecionar</span>
+        </footer>
+      </section>
+
+      <aside class="panel inspector" aria-labelledby="properties-heading">
+        <div>
+          <p class="panel-kicker">Inspector</p>
+          <h2 id="properties-heading">Propriedades</h2>
+          <div id="emptyInspector" class="empty">Selecione uma entidade para inspecionar identidade, caminho, geometria, camada e estado.</div>
+        </div>
+
+        <form id="inspectorForm" class="form hidden" aria-label="Inspector de propriedades">
+          <div class="identity" id="identityReadout"></div>
+
+          <div class="field">
+            <label for="entityName">Nome</label>
+            <input id="entityName" type="text">
+          </div>
+
+          <div class="field-grid">
+            <div class="field"><label for="entityType">Tipo</label><input id="entityType" type="text"></div>
+            <div class="field"><label for="entityLayer">Camada</label><select id="entityLayer"></select></div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field"><label for="entityX">Coordenada X</label><input id="entityX" type="number" step="1"></div>
+            <div class="field"><label for="entityY">Coordenada Y</label><input id="entityY" type="number" step="1"></div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field"><label for="entityWidth">Largura</label><input id="entityWidth" type="number" min="1"></div>
+            <div class="field"><label for="entityDepth">Profundidade</label><input id="entityDepth" type="number" min="1"></div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field"><label for="entityHeight">Elevação</label><input id="entityHeight" type="number" min="0"></div>
+            <div class="field"><label for="entityRotation">Rotação</label><input id="entityRotation" type="number" min="0" max="359"></div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="entityState">Estado</label>
+              <select id="entityState"><option>planejado</option><option>ativo</option><option>bloqueado</option></select>
+            </div>
+            <div class="field"><label for="entityColor">Cor / material</label><input id="entityColor" type="color"></div>
+          </div>
+
+          <button id="deleteInspector" class="danger" type="button">Remover entidade selecionada</button>
+        </form>
+
+        <div class="layer-section">
+          <div class="separator"></div>
+          <p class="panel-kicker">Camadas</p>
+          <div id="layerList" class="layer-list"></div>
+        </div>
+      </aside>
+
+    </main>
+
+    <section class="bottom-dock" aria-label="Histórico, relações e exportação">
+
+      <section class="panel dock-panel" aria-labelledby="history-heading">
+        <div class="dock-head">
+          <div><p class="panel-kicker">Timeline</p><h2 id="history-heading">Histórico</h2></div>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <section class="panel dock-panel" aria-labelledby="relations-heading">
+        <div class="dock-head">
+          <div><p class="panel-kicker">Semântica</p><h2 id="relations-heading">Relações</h2></div>
+          <button id="createRelation" class="action-btn" type="button">belongs_to</button>
+        </div>
+        <div id="relationList" class="relation-list"></div>
+      </section>
+
+      <section class="panel dock-panel" aria-labelledby="export-heading">
+        <div><p class="panel-kicker">Arquivo</p><h2 id="export-heading">Salvar e exportar</h2></div>
+        <div class="export-grid">
+          <button id="importBtn" class="action-btn" type="button">Importar JSON</button>
+          <button id="exportBtn" class="action-btn primary" type="button">Exportar JSON</button>
+          <button id="saveAsBtn" class="action-btn" type="button">Salvar como</button>
+          <button id="fullExportBtn" class="action-btn" type="button">Projeto completo</button>
+        </div>
+        <input id="importInput" type="file" accept="application/json">
+      </section>
+
+    </section>
+  </div>
+
+  <!-- Ordem importa: cada módulo depende dos anteriores no namespace ZED -->
+  <script src="js/state.js"></script>
+  <script src="js/geometry.js"></script>
+  <script src="js/world-model.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/relations.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/renderer-2d.js"></script>
+  <script src="js/inspector.js"></script>
+  <script src="js/editor-tools.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
