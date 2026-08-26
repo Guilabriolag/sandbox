@@ -1,0 +1,4 @@
+{
+  "_comment": "Reservado para a Etapa 2: entidades do tipo 'predio' do Megacomplexo completo (Tamboré, Catarina, Centro Comercial). Formato de cada item deve seguir o schema de Entity do contrato ZYRO (id opaco, type, geometry, transform, style, metadata).",
+  "buildings": []
+}

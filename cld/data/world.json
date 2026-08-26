@@ -1,0 +1,25 @@
+{
+  "version": 3,
+  "world": { "id": "world_megacomplexo", "name": "Megacomplexo", "slug": "megacomplexo" },
+  "locations": [
+    { "id": "region_catarina", "type": "regiao", "name": "Catarina", "parentId": null },
+    { "id": "zone_comercial", "type": "zona", "name": "Zona Comercial", "parentId": null }
+  ],
+  "entities": [],
+  "relations": [],
+  "layers": {
+    "terreno": { "visible": true, "locked": false },
+    "infraestrutura": { "visible": true, "locked": false },
+    "vias": { "visible": true, "locked": false },
+    "calcadas": { "visible": true, "locked": false },
+    "pracas": { "visible": true, "locked": false },
+    "zonas": { "visible": true, "locked": false },
+    "lotes": { "visible": true, "locked": false },
+    "construcoes": { "visible": true, "locked": false },
+    "interiores": { "visible": true, "locked": false },
+    "urbanos": { "visible": true, "locked": false },
+    "entidades": { "visible": true, "locked": false },
+    "debug": { "visible": true, "locked": false }
+  },
+  "events": []
+}

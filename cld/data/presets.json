@@ -1,0 +1,10 @@
+{
+  "avenida": { "name": "Avenida", "layer": "vias", "color": "#62706b", "kind": "line", "width": 14 },
+  "praca":   { "name": "Praça",   "layer": "pracas", "color": "#9fbd68", "kind": "polygon", "width": 80, "depth": 60 },
+  "zona":    { "name": "Zona",    "layer": "zonas", "color": "#d4ca91", "kind": "polygon", "width": 160, "depth": 120 },
+  "lote":    { "name": "Lote",    "layer": "lotes", "color": "#d7c499", "kind": "polygon", "width": 70, "depth": 52 },
+  "predio":  { "name": "Prédio",  "layer": "construcoes", "color": "#cc755e", "kind": "rect", "width": 52, "depth": 42, "height": 18 },
+  "porta":   { "name": "Entrada", "layer": "interiores", "color": "#8c6d54", "kind": "rect", "width": 16, "depth": 10 },
+  "arvore":  { "name": "Árvore",  "layer": "urbanos", "color": "#4e8a67", "kind": "point", "width": 18, "depth": 18 },
+  "veiculo": { "name": "Veículo", "layer": "entidades", "color": "#3f7799", "kind": "rect", "width": 26, "depth": 13 }
+}
